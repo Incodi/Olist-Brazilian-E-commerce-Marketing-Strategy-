@@ -1,0 +1,116 @@
+Date table:
+Date =
+CALENDAR(
+DATE(2016, 1, 1),
+DATE(2018, 12, 31)
+)
+Year =
+YEAR('Date'[Date])
+Month Number =
+MONTH('Date'[Date])
+Month =
+FORMAT('Date'[Date], "MMMM")
+Month Year =
+FORMAT('Date'[Date], "MMM YYYY")
+Quarter =
+"Q" & FORMAT('Date'[Date], "Q")
+Year Month Number =
+YEAR('Date'[Date]) * 100 + MONTH('Date'[Date])
+Basic measures:
+Total Revenue =
+SUM('order_items'[price])
+Total Freight =
+SUM('order_items'[freight_value])
+Total Orders =
+DISTINCTCOUNT('orders'[order_id])
+Average Order Value =
+DIVIDE([Total Revenue], [Total Orders])
+Items Sold =
+COUNTROWS('order_items')
+Delivery calculated columns:
+Delivery Days =
+IF(
+ISBLANK('orders'[Date Delivered to Customer]),
+BLANK(),
+DATEDIFF(
+'orders'[Purchase Date],
+'orders'[Date Delivered to Customer],
+DAY
+)
+)
+Estimated Delivery Days =
+IF(
+ISBLANK('orders'[Estimated Delivery Date]),
+BLANK(),
+DATEDIFF(
+'orders'[Purchase Date],
+'orders'[Estimated Delivery Date],
+DAY
+)
+)
+Delivery Delay Days =
+IF(
+ISBLANK('orders'[Date Delivered to Customer]),
+BLANK(),
+DATEDIFF(
+'orders'[Estimated Delivery Date],
+'orders'[Date Delivered to Customer],
+DAY
+)
+)
+Delivery Status =
+IF(
+ISBLANK('orders'[Date Delivered to Customer]),
+"Not Delivered",
+IF(
+'orders'[Delivery Delay Days] > 0,
+"Late",
+"On Time"
+)
+)
+Delivery measures:
+Delivered Orders =
+CALCULATE(
+[Total Orders],
+'orders'[Delivery Status] <> "Not Delivered"
+)
+Late Orders =
+CALCULATE(
+[Total Orders],
+'orders'[Delivery Status] = "Late"
+)
+On-Time Orders =
+CALCULATE(
+[Total Orders],
+'orders'[Delivery Status] = "On Time"
+)
+On-Time Delivery % =
+DIVIDE(
+[On-Time Orders],
+[Delivered Orders]
+)
+Average Delivery Days =
+AVERAGE('orders'[Delivery Days])
+Average Delivery Delay =
+AVERAGE('orders'[Delivery Delay Days])
+Late Delivery % =
+DIVIDE(
+[Late Orders],
+[Delivered Orders]
+)
+Review measure:
+Average Review Score =
+AVERAGE('order_reviews'[review_score])
+Testing:
+Delay Category =
+SWITCH(
+TRUE(),
+ISBLANK('orders'[Delivery Delay Days]), "Not Delivered",
+'orders'[Delivery Delay Days] <= -7, "7+ Days Early",
+'orders'[Delivery Delay Days] < 0, "Early",
+'orders'[Delivery Delay Days] = 0, "On Time",
+'orders'[Delivery Delay Days] <= 3, "1–3 Days Late",
+'orders'[Delivery Delay Days] <= 7, "4–7 Days Late",
+"8+ Days Late"
+)
+
