@@ -4,9 +4,10 @@ A Power BI portfolio project analyzing the Brazilian Olist e-commerce dataset to
 
 ## Project Status
 
-Work in progress. The data model and initial analysis are complete, and I am currently studying dashboard design and refining the dashboard layout, visual design, and analysis. Additional metrics and visualizations may be added as the project develops.
-
 All main DAX formulas are uploaded for me. DAX functions made specifically for testing relationships were used a lot but aren't in the file.
+
+Work in progress: The data model and initial analysis are complete, and I am currently studying dashboard design and refining the dashboard layout, visual design, and analysis. Additional metrics and visualizations may be added as the project develops. 
+This will be finished when my other project, Centroids, has a good enough demo. 
 
 ## Overview
 
